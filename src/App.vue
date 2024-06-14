@@ -1,48 +1,56 @@
 <template>
-  <!-- 모달창 -->
-  <div class="black-bg" v-if="modal == true">
-    <div class="white-bg">
-      <img :src="oneRooms[userClick].image" class="room-img" />
-      <h4>{{ oneRooms[userClick].title }}</h4>
-      <p>{{ oneRooms[userClick].content }}</p>
-      <p>{{ oneRooms[userClick].price }}</p>
-
-      <button @click="modal = false">닫기</button>
-    </div>
-  </div>
-  <!-- banner -->
-  <Discount />
-
+  <!-- props활용 -->
+  <Transition name="fade">
+    <Modal
+      :oneRooms="oneRooms"
+      :userClick="userClick"
+      :modal="modal"
+      @closeModal="modal = $event"
+    />
+  </Transition>
   <!-- navbar -->
+
   <div class="menu">
     <a v-for="menu in menus" :key="menu">{{ menu }}</a>
   </div>
-  <!-- main -->
-  <div v-for="(item, i) in oneRooms" :key="i">
-    <img :src="oneRooms[i].image" class="room-img" />
-    <h4
-      @click="
-        modal = true;
-        userClick = i;
-      "
-    >
-      {{ oneRooms[i].title }}
-    </h4>
-    <p>{{ oneRooms[i].price }}원</p>
-    <!-- <button @click="counters[i]++">허위매물 신고</button>
-    <span>신고 수 : {{ counters[i] }}</span> -->
-  </div>
+
+  <!-- banner -->
+  <Discount />
+  <!-- <Card
+    :oneRooms="oneRooms"
+    :userClick="userClick"
+    :modal="modal"
+    :name="object.name"
+    :age="object.age"
+    v-bind="object"
+  /> -->
+  <Card
+    @openModal="
+      modal = true;
+      userClick = $event;
+    "
+    :oneRooms="oneRooms[i]"
+    v-for="(item, i) in oneRooms"
+    :key="i"
+  />
+  <!-- emit 으로 넘어온 데이터는 @작명= 이렇게 하고 메시지와 데이터도 같이 보낼 수 있다.
+  부모 컴포넌트는 $event -> 룸object.id를 보냈다 이거로 수신한다. 기존엔 i 로 했었음-->
+  <!-- Card 에 오브젝트 자체를 보낼 수 있다. -->
 </template>
 
 <script>
+import Modal from "./components/Modal.vue";
 import Discount from "./components/Discount.vue";
+import Card from "./components/Card.vue";
+
 import data from "./data/data.js";
 
 export default {
   name: "app",
-  components: { Discount },
+  components: { Discount, Modal, Card },
   data() {
     return {
+      object: { name: "lee", age: "20" },
       oneRooms: data,
       modal: false,
       price1: 60,
@@ -62,6 +70,23 @@ export default {
 </script>
 
 <style>
+.start {
+  opacity: 0;
+  transition: all 1s;
+}
+.end {
+  opacity: 1;
+}
+
+.fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: all 1s;
+}
+.fade-enter-to {
+  opacity: 1;
+}
 body {
   margin: 0;
 }
