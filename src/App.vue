@@ -15,7 +15,7 @@
   </div>
 
   <!-- banner -->
-  <Discount />
+  <Discount v-if="showDiscount == true" :salePercent="salePercent" />
   <!-- <Card
     :oneRooms="oneRooms"
     :userClick="userClick"
@@ -65,6 +65,8 @@ export default {
       products: ["역삼동원룸", "천호동원룸", "마포구원룸"],
       counters: 0,
       userClick: 0,
+      showDiscount: true,
+      salePercent: 50,
     };
   },
   methods: {
@@ -89,6 +91,21 @@ export default {
       this.oneRooms = [...this.orgOneRooms];
     },
   },
+  // 서버에서 데이터 가져올때 lifeCycle hook 안에 코드 짬
+  created() {
+    // 서버에서 데이터 가져오는 중
+  },
+  mounted() {
+    // setTimeout(() => {
+    //   this.showDiscount = false;
+    // }, 2000);
+    setInterval(() => {
+      // 1초마다 1퍼씩 감소하는 로직
+      this.salePercent -= 1;
+    }, 1000);
+  },
+
+  beforeMount() {},
 };
 </script>
 

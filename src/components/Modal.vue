@@ -48,6 +48,13 @@ export default {
       }
     },
   },
+  // input에 update (리렌더링) 전에 hook을 걸어서 alert띄우기
+  beforeUpdate() {
+    if (this.month == 2) {
+      alert("최소2 이상 입력하세요");
+      this.month = 1;
+    }
+  },
 };
 </script>
 <style></style>
