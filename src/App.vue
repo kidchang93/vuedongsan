@@ -24,6 +24,11 @@
     :age="object.age"
     v-bind="object"
   /> -->
+
+  <!-- 상품 정렬 -->
+  <button @click="priceSort">가격순 정렬</button>
+  <button @click="sortBack">되돌리기</button>
+
   <Card
     @openModal="
       modal = true;
@@ -50,6 +55,7 @@ export default {
   components: { Discount, Modal, Card },
   data() {
     return {
+      orgOneRooms: [...data],
       object: { name: "lee", age: "20" },
       oneRooms: data,
       modal: false,
@@ -65,6 +71,23 @@ export default {
     counter() {
       this.counters += 1;
     },
+    priceSort() {
+      // sort 함수 = [3, 5, 2].sort()
+      // 출력 : [2, 3, 5] -> 문자 정렬
+      // var array = [3, 5, 2];
+      // a , b = 데이터
+      // 음수면 a 를 왼쪽으로 보내주세요 라는 로직을 갖고있다.
+      // 원본을 변형
+      this.oneRooms.sort((a, b) => {
+        return a.price - b.price;
+      });
+    },
+    sortBack() {
+      // 되돌리기
+      // 등호를 쓴 array 는 공유해주세요 라는 뜻
+      // 그래서 스프레드 연산자 또 써줘야함
+      this.oneRooms = [...this.orgOneRooms];
+    },
   },
 };
 </script>
@@ -77,15 +100,27 @@ export default {
 .end {
   opacity: 1;
 }
-
-.fade-enter-from {
+/* 모달 닫힐 때 */
+.fade-leave-from {
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: all 1s;
+}
+.fade-leave-to {
   opacity: 0;
+}
+/* 모달 열릴 때 */
+.fade-enter-from {
+  transform: translateY(-1000px);
+  /* opacity: 0; */
 }
 .fade-enter-active {
   transition: all 1s;
 }
 .fade-enter-to {
-  opacity: 1;
+  transform: translateY(0px);
+  /* opacity: 1; */
 }
 body {
   margin: 0;
